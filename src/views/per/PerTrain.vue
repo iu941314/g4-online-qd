@@ -3,8 +3,11 @@
 </template>
 
 <script>
+    import Default from "vue-echarts";
+
     export default {
-        name: "PerTrain"
+        name: "PerTrain",
+      components: {Default}
     }
 </script>
 
