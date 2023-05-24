@@ -20,12 +20,12 @@ proxyObj['/'] = {
 
 }
 
-proxyObj['/ws'] = {
+proxyObj['/wx'] = {
     //websocket
-    ws: false,
+    ws: true,
     //目标地址
     target: 'ws://localhost:8081'
-}
+};
 
 module.exports = {
     devServer: {

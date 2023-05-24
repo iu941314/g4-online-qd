@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import {getRequest} from "../utils/api";
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
+import { Notification } from 'element-ui';
 
 Vue.use(Vuex)
 
@@ -11,11 +12,13 @@ const now = new Date();
 const store = new Vuex.Store({
     state: {
         routes: [],
-        sessions: [],
+        sessions: {},
         admins: [],
-        currentSessionId: -1,
+        currentAdmin: JSON.parse(window.sessionStorage.getItem('user')),
+        currentSession: null,
         filterKey: '',
-        stomp: null
+        stomp: null,
+        idDot:{}
     },
 
     mutations: {
@@ -25,23 +28,29 @@ const store = new Vuex.Store({
         initRoutes(state, data) {
             state.routes = data;
         },
-        changeCurrentSessionId(state, id) {
-            state.currentSessionId = id;
+        changeCurrentSession(state, currentSession) {
+            state.currentSession = currentSession;
+            Vue.set(state.idDot, state.currentAdmin.username+'#'+state.currentSession.username,false);
         },
         addMessage(state, msg) {
-            state.sessions[state.currentSessionId - 1].messages.push({
-                content: msg,
+            let mss = state.sessions[state.currentAdmin.username + '#' + msg.to];
+            if (!mss) {
+                //state.sessions[state.currentAdmin.username + '#' + msg.to] = [];
+                Vue.set(state.sessions, state.currentAdmin.username + '#' + msg.to, [])
+            }
+            state.sessions[state.currentAdmin.username + '#' + msg.to].push({
+                content: msg.content,
                 date: new Date(),
-                self: true
+                self: !msg.notSelf
             })
         },
         INIT_DATA(state) {
             //浏览器本地的历史聊天记录
-            // let data = localStorage.getItem('vue-chat-session');
-            // //console.log(data)
-            // if (data) {
-            //     state.sessions = JSON.parse(data);
-            // }
+            let data = localStorage.getItem('vue-chat-session');
+            //console.log(data)
+            if (data) {
+                state.sessions = JSON.parse(data);
+            }
         },
         INIT_ADMINS(state, data) {
             state.admins = data;
@@ -54,13 +63,27 @@ const store = new Vuex.Store({
             let token = window.sessionStorage.getItem('tokenStr');
             context.state.stomp.connect({'Auth-Token': token}, success => {
                 context.state.stomp.subscribe('/user/queue/chat', msg => {
-                    console.log(msg.body);
+                    //console.log(receiveMsg);
+                    let receiveMsg = JSON.parse(msg.body);
+                    if (!context.state.currentSession || receiveMsg.from != context.state.currentSession.username) {
+                        Notification.info({
+                            title: '[' + receiveMsg.fromNickName + ']发来一条消息',
+                            message: receiveMsg.content.length>10?receiveMsg.content.substr(0,10)+'...':receiveMsg.content,
+                            position: 'bottom-right'
+                        });
+                        Vue.set(context.state.idDot, context.state.currentAdmin.username+'#'+receiveMsg.from,true);
+                    }
+                    receiveMsg.notSelf = true;
+                    receiveMsg.to = receiveMsg.from;
+                    //接收
+                    context.commit("addMessage", receiveMsg);
                 })
             }, error => {
 
             })
         },
         initData(context) {
+            context.commit('INIT_DATA');
             getRequest('/chat/admin').then(resp => {
                 if (resp) {
                     context.commit('INIT_ADMINS', resp)
