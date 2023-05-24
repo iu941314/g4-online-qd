@@ -1,11 +1,16 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import 'font-awesome/css/font-awesome.css'
-
+import 'font-awesome/css/font-awesome.css';
+import * as echarts from 'echarts';
+//需要挂载到Vue原型上
+Vue.prototype.$echarts = echarts
+//流程审批插件
+import vap from "vue-approval-progress";
+Vue.use(vap)
 
 import {postRequest} from "./utils/api";
 import {putRequest} from "./utils/api";
@@ -13,6 +18,7 @@ import {getRequest} from "./utils/api";
 import {deleteRequest} from "./utils/api";
 import {initMenu} from "./utils/menus";
 import {downloadRequest} from "./utils/download";
+
 
 Vue.config.productionTip = false
 Vue.use(ElementUI,{size:'small'});

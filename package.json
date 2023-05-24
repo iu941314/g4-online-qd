@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "core-js": "^3.8.3",
+    "echarts": "^5.4.2",
     "element-ui": "^2.15.6",
     "font-awesome": "^4.7.0",
     "js-file-download": "^0.4.12",
@@ -16,6 +17,8 @@
     "sockjs-client": "^1.6.0",
     "stompjs": "^2.3.3",
     "vue": "^2.6.14",
+    "vue-approval-progress": "^3.0.2",
+    "vue-echarts": "^6.5.5",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
   },
@@ -23,6 +26,7 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "@vue/composition-api": "^1.7.1",
     "node-sass": "^7.0.1",
     "sass-loader": "^12.6.0",
     "vue-template-compiler": "^2.6.14"
