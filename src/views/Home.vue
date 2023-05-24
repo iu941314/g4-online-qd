@@ -3,11 +3,11 @@
         <el-container>
             <el-header class="homeHeader">
                 <div class="title">G4-online</div>
-                <div>
-                    <el-button icon="el-icon-bell"
+                <div style="height: 60px">
+                    <el-button icon="el-icon-chat-dot-square"
                                type="text"
-                               size="normal"
-                               style="margin-right: 8px; color: black"
+                               size="medium" round
+                               style="margin-right: 20px; color: black"
                                @click="goChat">
                     </el-button>
                     <el-dropdown class="userInfo" @command="commandHandler">
@@ -24,17 +24,17 @@
             </el-header>
 
             <el-container>
-                <el-aside width="200px" style="overflow: hidden">
-                    <el-menu router unique-opened>
+                <el-aside width="200px" style="overflow: hidden" class="menu">
+                    <el-menu router unique-opened class="menu">
                         <el-submenu :index="index+''"
-                                    v-for="(item,index) in routes" :key="index"
+                                    v-for="(item,index) in routes" :key="index" class="menu"
                                     v-if="!item.hidden">
                             <template slot="title">
                                 <i :class="item.iconCls" style="color: #1accff;margin-right: 5px"></i>
                                 <span>{{item.name}}</span>
                             </template>
                             <el-menu-item :index="children.path"
-                                          v-for="(children,indexj) in item.children" :key="indexj">
+                                          v-for="(children,indexj) in item.children" :key="indexj" class="menu">
                                 {{children.name}}
                             </el-menu-item>
                         </el-submenu>
@@ -61,7 +61,7 @@
 
 <script>
     export default {
-        name: "Home",
+          name: "Home",
         data() {
             return {
                 user: JSON.parse(window.sessionStorage.getItem('user'))
@@ -71,9 +71,7 @@
             routes() {
                 return this.$store.state.routes;
             },
-            // user(){
-            //     return this.$store.state.currentAdmin;
-            // }
+
         },
         methods: {
             goChat(){
@@ -114,7 +112,8 @@
 
 <style>
     .homeHeader {
-        background: #409eff;
+        /*background: #d4fefc;*/
+      background: linear-gradient(to right, #ffffff, #e6f7ff);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -122,10 +121,13 @@
         box-sizing: border-box;
     }
 
+    .menu{
+    }
+
     .homeHeader .title {
         font-size: 30px;
         font-family: 新宋体;
-        color: white;
+        color: #010102;
     }
 
     .homeHeader .userInfo {
